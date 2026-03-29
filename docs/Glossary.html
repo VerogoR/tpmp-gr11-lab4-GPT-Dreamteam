@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Глоссарий</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand"><a href="index.html">Helicopter Delivery</a></div>
+        <nav class="toc">
+          <div class="toc-section">Общее</div>
+          <ul class="toc-list">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="Glossary.html">Глоссарий</a></li>
+            <li><a href="Code-Repository.html">Репозиторий кода</a></li>
+          </ul>
+          <div class="toc-section">Командный проект</div>
+          <ul class="toc-list">
+            <li><a href="Functional-Requirements.html">Функциональные требования</a></li>
+            <li><a href="Project-Specification.html">Спецификация проекта</a></li>
+            <li><a href="Additional-Specification.html">Дополнительная спецификация</a></li>
+            <li><a href="Database-Schema.html">Схема базы данных</a></li>
+            <li><a href="Presentation.html">Презентация проекта</a></li>
+            <li><a href="https://github.com/orgs/fpmi-tpmp2026/projects/18" target="_blank" rel="noopener noreferrer">Доска Kanban</a></li>
+          </ul>
+          <div class="toc-section">Индивидуальные проекты</div>
+          <ul class="toc-list">
+            <li><a href="Individual-Gerdiy.html">Гердий Егор</a></li>
+            <li><a href="Individual-Borisovets.html">Борисовец Андрей</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="content">
+        <h1>Глоссарий</h1>
+        <p>Термины, используемые в проекте «Воздушный извозчик».</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Термин</th>
+              <th>Пояснение</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Вертолет</strong></td>
+              <td>Единица техники авиаотряда: номер, марка, дата изготовления, грузоподъемность, дата капремонта и летный ресурс.</td>
+            </tr>
+            <tr>
+              <td><strong>Экипаж</strong></td>
+              <td>Три закрепленных за вертолетом специалиста: табельный номер, ФИО, должность, стаж, адрес, дата рождения и привязка к вертолету.</td>
+            </tr>
+            <tr>
+              <td><strong>Рейс</strong></td>
+              <td>Перевозка с параметрами: дата, код рейса, вертолет, масса груза, число людей, длительность, стоимость и признак спецрейса.</td>
+            </tr>
+            <tr>
+              <td><strong>Командир авиаотряда</strong></td>
+              <td>Роль с полным доступом: аналитика, CRUD, начисления по всем экипажам, управление пользователями.</td>
+            </tr>
+            <tr>
+              <td><strong>Летчик / член экипажа</strong></td>
+              <td>Роль с ограниченным доступом: свои рейсы и начисления по своему табельному номеру.</td>
+            </tr>
+            <tr>
+              <td><strong>Летный ресурс</strong></td>
+              <td>Максимальная суммарная длительность рейсов после капремонта. Превышение блокируется триггером.</td>
+            </tr>
+            <tr>
+              <td><strong>Начисление (процент)</strong></td>
+              <td>Доля от стоимости рейса: для обычного и спецрейса проценты берутся из <code>AIR_CONFIG</code>.</td>
+            </tr>
+            <tr>
+              <td><strong>Таблица начислений за период</strong></td>
+              <td><code>AIR_PAYROLL_PERIOD</code> — результат расчета выплат по каждому члену экипажа за интервал дат.</td>
+            </tr>
+            <tr>
+              <td><strong>BLOB / изображение</strong></td>
+              <td><code>AIR_IMAGES</code> — хранение двоичных данных (например, фото вертолета) с привязкой к сущности.</td>
+            </tr>
+          </tbody>
+        </table>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Спецификация проекта</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand"><a href="index.html">Helicopter Delivery</a></div>
+        <nav class="toc">
+          <div class="toc-section">Общее</div>
+          <ul class="toc-list">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="Glossary.html">Глоссарий</a></li>
+            <li><a href="Code-Repository.html">Репозиторий кода</a></li>
+          </ul>
+          <div class="toc-section">Командный проект</div>
+          <ul class="toc-list">
+            <li><a href="Functional-Requirements.html">Функциональные требования</a></li>
+            <li><a href="Project-Specification.html">Спецификация проекта</a></li>
+            <li><a href="Additional-Specification.html">Дополнительная спецификация</a></li>
+            <li><a href="Database-Schema.html">Схема базы данных</a></li>
+            <li><a href="Presentation.html">Презентация проекта</a></li>
+            <li><a href="https://github.com/orgs/fpmi-tpmp2026/projects/18" target="_blank" rel="noopener noreferrer">Доска Kanban</a></li>
+          </ul>
+          <div class="toc-section">Индивидуальные проекты</div>
+          <ul class="toc-list">
+            <li><a href="Individual-Gerdiy.html">Гердий Егор</a></li>
+            <li><a href="Individual-Borisovets.html">Борисовец Андрей</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="content">
+        <h1>Спецификация проекта (командная)</h1>
+        <p>Общая схема данных: <a href="Database-Schema.html">Схема базы данных</a>.</p>
+
+        <hr />
+        <h2>1. Диаграмма вариантов использования</h2>
+        <div class="img-wrap">
+          <img src="https://github.com/user-attachments/assets/6a7a810e-2859-4d52-81e1-b3f19909ac31" alt="Use case" />
+        </div>
+        <p>
+          Кто из акторов (командир авиаотряда, член экипажа) инициирует какие сценарии.
+          Варианты с пометкой <code>(*)</code> доступны экипажу в ограниченном виде.
+        </p>
+
+        <hr />
+        <h2>2. Диаграмма структуры модулей</h2>
+        <div class="img-wrap">
+          <img src="https://github.com/user-attachments/assets/6fad75b7-bd89-40fc-97aa-7b695e323129" alt="Modules diagram" />
+        </div>
+        <p>
+          Приложение модульное: заголовки в <code>includes/</code>, реализации в <code>src/</code>.
+          Модули <code>common</code>, <code>db</code>, <code>auth</code>, <code>queries</code>,
+          <code>mutations</code>, <code>payroll</code>, <code>storage</code>, <code>main</code>
+          работают через SQLite C API.
+        </p>
+
+        <hr />
+        <h2>3. Диаграмма деятельности — вход и меню</h2>
+        <div class="img-wrap">
+          <img src="https://github.com/user-attachments/assets/1ef015a4-1440-4eb9-ae8a-e12c83834f38" alt="Activity login and menu" />
+        </div>
+        <p>
+          От запуска <code>helicopter_app</code> до выхода: открытие БД, опциональный seed,
+          <code>auth_login</code>, формирование сессии и цикл меню по правам роли.
+        </p>
+
+        <hr />
+        <h2>4. Диаграмма деятельности — добавление рейса</h2>
+        <div class="img-wrap">
+          <img src="https://github.com/user-attachments/assets/1a12d6bb-2a84-437b-b8ac-40c03614a035" alt="Activity add flight" />
+        </div>
+        <p>
+          Ввод данных рейса, проверка прав экипажа по вертолету, <code>INSERT</code> и работа триггера
+          <code>trg_air_flights_resource_check</code> (откат при превышении ресурса).
+        </p>
+
+        <hr />
+        <h2>5. Диаграмма последовательности — отчет «налет и ресурс»</h2>
+        <div class="img-wrap">
+          <img src="https://github.com/user-attachments/assets/565cea5b-dc02-43bb-b877-fdd49e905bc0" alt="Sequence flight resource" />
+        </div>
+        <p>
+          Пользователь выбирает пункт меню, затем <code>main/run_menu</code> вызывает запрос из
+          <code>queries.cpp</code>, после чего отчет выводится в консоль.
+        </p>
+
+        <hr />
+        <h2>6. Диаграмма последовательности — начисления за период</h2>
+        <div class="img-wrap">
+          <img src="https://github.com/user-attachments/assets/62039cb2-8e93-4066-a5a6-c7304dd020f0" alt="Sequence payroll period" />
+        </div>
+        <p>
+          Командир задает даты, вызывается <code>payroll_compute_squad_period</code>, затем транзакция
+          записывает результат в <code>AIR_PAYROLL_PERIOD</code>.
+        </p>
+
+        <hr />
+        <h2>7. Диаграмма компонентов</h2>
+        <div class="img-wrap">
+          <img src="https://github.com/user-attachments/assets/f650b203-67d5-4fd6-8a74-2c5b48aeb87b" alt="Component diagram" />
+        </div>
+        <p>Исполняемый модуль, зависимость от <code>libsqlite3</code>, SQL-скрипты и файл БД.</p>
+
+        <hr />
+        <h2>8. Диаграмма развертывания</h2>
+        <div class="img-wrap">
+          <img src="https://github.com/user-attachments/assets/c68b7b84-b854-4500-a4c5-cc23153247d4" alt="Deployment diagram" />
+        </div>
+        <p>
+          Рабочая станция с бинарником, SQL-каталогом и файлом <code>helicopter.db</code>.
+          Отдельно возможен узел CI (GitHub Actions) для сборки и тестов.
+        </p>
+      </main>
+    </div>
+  </body>
+</html>

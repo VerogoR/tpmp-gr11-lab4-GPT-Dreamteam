@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Функциональные требования</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand"><a href="index.html">Helicopter Delivery</a></div>
+        <nav class="toc">
+          <div class="toc-section">Общее</div>
+          <ul class="toc-list">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="Glossary.html">Глоссарий</a></li>
+            <li><a href="Code-Repository.html">Репозиторий кода</a></li>
+          </ul>
+          <div class="toc-section">Командный проект</div>
+          <ul class="toc-list">
+            <li><a href="Functional-Requirements.html">Функциональные требования</a></li>
+            <li><a href="Project-Specification.html">Спецификация проекта</a></li>
+            <li><a href="Additional-Specification.html">Дополнительная спецификация</a></li>
+            <li><a href="Database-Schema.html">Схема базы данных</a></li>
+            <li><a href="Presentation.html">Презентация проекта</a></li>
+            <li><a href="https://github.com/orgs/fpmi-tpmp2026/projects/18" target="_blank" rel="noopener noreferrer">Доска Kanban</a></li>
+          </ul>
+          <div class="toc-section">Индивидуальные проекты</div>
+          <ul class="toc-list">
+            <li><a href="Individual-Gerdiy.html">Гердий Егор</a></li>
+            <li><a href="Individual-Borisovets.html">Борисовец Андрей</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="content">
+        <h1>Функциональные требования</h1>
+
+        <h2>Актеры</h2>
+        <ul>
+          <li><strong>Командир</strong> — полное администрирование и аналитика.</li>
+          <li><strong>Член экипажа</strong> — просмотр собственных данных в сценариях, доступных для экипажа.</li>
+        </ul>
+
+        <h2>Варианты использования (кратко)</h2>
+        <ol>
+          <li><strong>Войти в систему</strong> — проверка логина/пароля в <code>AIR_USERS</code>, определение роли.</li>
+          <li><strong>Просмотр налета и остатка ресурса</strong> — суммарная длительность после <code>date_last_fix</code> и сравнение с <code>flight_resource</code>.</li>
+          <li><strong>Отчет по рейсам за период</strong> — список рейсов и агрегаты по массе/пассажиропотоку.</li>
+          <li><strong>Сводки по спецрейсам и обычным</strong> — количество, суммарная масса, суммарная стоимость.</li>
+          <li><strong>Аналитика максимумов</strong> — вертолет с максимумом рейсов и экипаж с максимумом начислений.</li>
+          <li><strong>Рейсы экипажа / по вертолету</strong> — по роли пользователя.</li>
+          <li><strong>Начисление за период</strong> — расчет по всем членам экипажа в <code>AIR_PAYROLL_PERIOD</code>.</li>
+          <li><strong>Начисление летчику</strong> — расчет за интервал дат (все/спец/обычные рейсы).</li>
+          <li><strong>CRUD</strong> — вертолеты, экипаж, рейсы, пользователи (командир).</li>
+          <li><strong>Экспорт</strong> — CSV по рейсам, JSON по вертолетам, тестовое изображение в БД.</li>
+        </ol>
+
+        <h2>Текстовый сценарий: «Войти в систему»</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Шаг</th>
+              <th>Действие</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Пользователь запускает приложение и при необходимости указывает путь к БД.</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Система открывает SQLite. Если таблиц нет — выполняет скрипты создания схемы и расширений.</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Пользователь вводит логин и пароль.</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Система ищет запись в <code>AIR_USERS</code>. При неверных данных выводит ошибку.</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Если <code>AIR_CREW_number</code> пусто — роль «Командир», иначе роль «Экипаж».</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>Показывается главное меню согласно роли.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="img-wrap">
+          <img src="https://github.com/user-attachments/assets/ee734d31-e5f8-4978-b9ec-2036294da62e" alt="Use case diagram" />
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

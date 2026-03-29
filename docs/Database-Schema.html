@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Схема базы данных</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand"><a href="index.html">Helicopter Delivery</a></div>
+        <nav class="toc">
+          <div class="toc-section">Общее</div>
+          <ul class="toc-list">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="Glossary.html">Глоссарий</a></li>
+            <li><a href="Code-Repository.html">Репозиторий кода</a></li>
+          </ul>
+          <div class="toc-section">Командный проект</div>
+          <ul class="toc-list">
+            <li><a href="Functional-Requirements.html">Функциональные требования</a></li>
+            <li><a href="Project-Specification.html">Спецификация проекта</a></li>
+            <li><a href="Additional-Specification.html">Дополнительная спецификация</a></li>
+            <li><a href="Database-Schema.html">Схема базы данных</a></li>
+            <li><a href="Presentation.html">Презентация проекта</a></li>
+            <li><a href="https://github.com/orgs/fpmi-tpmp2026/projects/18" target="_blank" rel="noopener noreferrer">Доска Kanban</a></li>
+          </ul>
+          <div class="toc-section">Индивидуальные проекты</div>
+          <ul class="toc-list">
+            <li><a href="Individual-Gerdiy.html">Гердий Егор</a></li>
+            <li><a href="Individual-Borisovets.html">Борисовец Андрей</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="content">
+        <h1>Схема базы данных</h1>
+
+        <h2>Описание</h2>
+        <p>
+          База SQLite под предметную область «Воздушный извозчик»: вертолеты, экипаж, рейсы,
+          пользователи, конфигурация процентов. Для лабораторной добавлены начисления за период,
+          хранение BLOB и триггер контроля летного ресурса.
+        </p>
+
+        <h2>Основные таблицы</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Таблица</th>
+              <th>Назначение</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>AIR_CONFIG</code></td><td>Проценты от стоимости: обычный / спецрейс.</td></tr>
+            <tr><td><code>AIR_HELICOPTERS</code></td><td>Вертолеты.</td></tr>
+            <tr><td><code>AIR_CREW</code></td><td>Экипаж, FK на вертолет.</td></tr>
+            <tr><td><code>AIR_FLIGHTS</code></td><td>Рейсы, FK на вертолет, флаг <code>is_special</code>.</td></tr>
+            <tr><td><code>AIR_USERS</code></td><td>Логин/пароль и опциональная связь с экипажем.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Расширения (sql/extensions.sql)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Объект</th>
+              <th>Назначение</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>AIR_PAYROLL_PERIOD</code></td><td>Результаты массового расчета выплат за период.</td></tr>
+            <tr><td><code>AIR_IMAGES</code></td><td>Хранение изображений (формат + BLOB) со ссылкой на сущность.</td></tr>
+            <tr><td><code>trg_air_flights_resource_check</code></td><td>Запрет INSERT при превышении летного ресурса.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>SQL-файлы проекта</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Файл</th>
+              <th>Содержимое</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="https://github.com/VerogoR/tpmp-gr11-lab4-GPT-Dreamteam/blob/main/sql/HelicopterDelivery_create.sql" target="_blank" rel="noopener noreferrer">HelicopterDelivery_create.sql</a></td>
+              <td>CREATE базовых таблиц.</td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/VerogoR/tpmp-gr11-lab4-GPT-Dreamteam/blob/main/sql/extensions.sql" target="_blank" rel="noopener noreferrer">extensions.sql</a></td>
+              <td>Начисления, изображения и триггер.</td>
+            </tr>
+            <tr>
+              <td><a href="https://github.com/VerogoR/tpmp-gr11-lab4-GPT-Dreamteam/blob/main/sql/seed.sql" target="_blank" rel="noopener noreferrer">seed.sql</a></td>
+              <td>Тестовые данные и пользователи.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Визуальная схема</h2>
+        <div class="img-wrap">
+          <img src="https://github.com/user-attachments/assets/b47e224f-1719-4997-b1ac-d9b649ba1099" alt="Database schema" />
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

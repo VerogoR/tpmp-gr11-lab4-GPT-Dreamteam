@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Дополнительная спецификация</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand"><a href="index.html">Helicopter Delivery</a></div>
+        <nav class="toc">
+          <div class="toc-section">Общее</div>
+          <ul class="toc-list">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="Glossary.html">Глоссарий</a></li>
+            <li><a href="Code-Repository.html">Репозиторий кода</a></li>
+          </ul>
+          <div class="toc-section">Командный проект</div>
+          <ul class="toc-list">
+            <li><a href="Functional-Requirements.html">Функциональные требования</a></li>
+            <li><a href="Project-Specification.html">Спецификация проекта</a></li>
+            <li><a href="Additional-Specification.html">Дополнительная спецификация</a></li>
+            <li><a href="Database-Schema.html">Схема базы данных</a></li>
+            <li><a href="Presentation.html">Презентация проекта</a></li>
+            <li><a href="https://github.com/orgs/fpmi-tpmp2026/projects/18" target="_blank" rel="noopener noreferrer">Доска Kanban</a></li>
+          </ul>
+          <div class="toc-section">Индивидуальные проекты</div>
+          <ul class="toc-list">
+            <li><a href="Individual-Gerdiy.html">Гердий Егор</a></li>
+            <li><a href="Individual-Borisovets.html">Борисовец Андрей</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="content">
+        <h1>Дополнительная спецификация</h1>
+
+        <h2>Надежность и целостность данных</h2>
+        <ul>
+          <li>Включены внешние ключи SQLite: <code>PRAGMA foreign_keys = ON</code>.</li>
+          <li>Ограничение летного ресурса реализовано триггером до вставки в <code>AIR_FLIGHTS</code>.</li>
+          <li>Инициализация схемы идемпотентна: базовые таблицы и расширения создаются с <code>IF NOT EXISTS</code>.</li>
+        </ul>
+
+        <h2>Безопасность</h2>
+        <ul>
+          <li>В учебной БД пароли хранятся в открытом виде (для production требуется хэширование).</li>
+          <li>Разграничение доступа реализовано на уровне приложения (командир/экипаж).</li>
+        </ul>
+
+        <h2>Удобство использования</h2>
+        <ul>
+          <li>Консольное меню с нумерованными пунктами на русском языке.</li>
+          <li>Подсказка по демо-входу при <code>HELI_SEED=1</code>.</li>
+          <li>Поддержка флага <code>--help</code> и переменных <code>HELI_SQL_DIR</code>, <code>HELI_SEED</code>.</li>
+        </ul>
+
+        <h2>Производительность</h2>
+        <p>
+          Для учебного объема данных индексов по первичным ключам достаточно.
+          При росте объема рекомендуется добавить индексы по
+          <code>AIR_FLIGHTS(date)</code> и <code>AIR_FLIGHTS(AIR_HELICOPTERS_number)</code>.
+        </p>
+
+        <h2>Сопровождаемость</h2>
+        <ul>
+          <li>Разделение по модулям: <code>auth</code>, <code>queries</code>, <code>mutations</code>, <code>payroll</code>, <code>storage</code>, <code>db</code>.</li>
+          <li>SQL вынесен в файлы и может быть повторно применен при пустой БД.</li>
+        </ul>
+
+        <h2>Функциональные ограничения</h2>
+        <ul>
+          <li>Один файл SQLite на запуск (по умолчанию <code>build/helicopter.db</code>).</li>
+          <li>Формат дат: <code>YYYY-MM-DD</code>.</li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Индивидуальный проект — Гердий</title>
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="brand"><a href="index.html">Helicopter Delivery</a></div>
+        <nav class="toc">
+          <div class="toc-section">Общее</div>
+          <ul class="toc-list">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="Glossary.html">Глоссарий</a></li>
+            <li><a href="Code-Repository.html">Репозиторий кода</a></li>
+          </ul>
+          <div class="toc-section">Командный проект</div>
+          <ul class="toc-list">
+            <li><a href="Functional-Requirements.html">Функциональные требования</a></li>
+            <li><a href="Project-Specification.html">Спецификация проекта</a></li>
+            <li><a href="Additional-Specification.html">Дополнительная спецификация</a></li>
+            <li><a href="Database-Schema.html">Схема базы данных</a></li>
+            <li><a href="Presentation.html">Презентация проекта</a></li>
+            <li><a href="https://github.com/orgs/fpmi-tpmp2026/projects/18" target="_blank" rel="noopener noreferrer">Доска Kanban</a></li>
+          </ul>
+          <div class="toc-section">Индивидуальные проекты</div>
+          <ul class="toc-list">
+            <li><a href="Individual-Gerdiy.html">Гердий Егор</a></li>
+            <li><a href="Individual-Borisovets.html">Борисовец Андрей</a></li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="content">
+        <h1>Спецификация проекта «Приемная комиссия»</h1>
+
+        <h2>Условие</h2>
+        <pre><code>Упражнение 2.3
+«Абитуриент»: id; фамилия; имя; отчество; пол; национальность; дата рождения
+(год, месяц, число); домашний адрес (индекс, страна, область, район,
+город, улица, дом, квартира); оценки по ЦТ; проходной балл.
+
+Упражнение 2.4
+Выполнить запросы:
+- вывести абитуриентов с проходным баллом >= 225;
+- через ALTER добавить столбцы, один из них vuz_id;
+- создать таблицу vuz (id, vuz_name, vuz_description);
+- вывести данные об абитуриентах с названием вуза;
+- count для проходного балла > 250;
+- sum баллов при пол=муж;
+- max/min балла;
+- inner join по вузу с id=3.</code></pre>
+
+        <h2>Диаграммы</h2>
+        <ul>
+          <li><a href="https://github.com/fpmi-tpmp2026/tpmp-gr11a-lab4-gpt-dreamteam/wiki/Abiturient-usecase.md" target="_blank" rel="noopener noreferrer">Use Case</a></li>
+          <li><a href="https://github.com/fpmi-tpmp2026/tpmp-gr11a-lab4-gpt-dreamteam/wiki/Abiturient-activity.md" target="_blank" rel="noopener noreferrer">Activity</a></li>
+          <li><a href="https://github.com/fpmi-tpmp2026/tpmp-gr11a-lab4-gpt-dreamteam/wiki/Abiturient-class.md" target="_blank" rel="noopener noreferrer">Class</a></li>
+          <li><a href="https://github.com/fpmi-tpmp2026/tpmp-gr11a-lab4-gpt-dreamteam/wiki/Abiturient-sequence.md" target="_blank" rel="noopener noreferrer">Sequence</a></li>
+          <li><a href="https://github.com/fpmi-tpmp2026/tpmp-gr11a-lab4-gpt-dreamteam/wiki/Abiturient-components.md" target="_blank" rel="noopener noreferrer">Components</a></li>
+        </ul>
+      </main>
+    </div>
+  </body>
+</html>
