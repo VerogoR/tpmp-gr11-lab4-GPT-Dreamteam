@@ -84,7 +84,7 @@ $(BUILDDIR)/test_main.o: tests/test_main.cpp | dirs
 	$(CXX) $(TEST_CXXFLAGS) -c tests/test_main.cpp -o $@
 
 $(BINDIR)/test_main: $(BUILDDIR)/test_main.o
-	$(CXX) -o $@ $^ $(CUNIT_LIBS)
+	$(CXX) -o $@ $^ $(LDFLAGS) $(CUNIT_LIBS)
 
 TEST_BINS = $(BINDIR)/test_db $(BINDIR)/test_auth $(BINDIR)/test_queries $(BINDIR)/test_mutations $(BINDIR)/test_payroll $(BINDIR)/test_storage $(BINDIR)/test_main
 
