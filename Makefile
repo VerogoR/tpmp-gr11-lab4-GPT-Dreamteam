@@ -24,15 +24,18 @@ TEST_LDFLAGS = $(LDFLAGS) $(CUNIT_LIBS)
 SRCDIR = src
 BUILDDIR = build
 BINDIR = bin
+SQLDIR = sql
+DB_PATH = $(BUILDDIR)/helicopter.db
+SQLITE3 ?= sqlite3
 
 APP_SRCS = $(SRCDIR)/main.cpp $(SRCDIR)/db.cpp $(SRCDIR)/auth.cpp $(SRCDIR)/queries.cpp $(SRCDIR)/mutations.cpp $(SRCDIR)/payroll.cpp $(SRCDIR)/storage.cpp
 APP_OBJS = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(APP_SRCS))
 
 LIB_OBJS = $(BUILDDIR)/db.o $(BUILDDIR)/auth.o $(BUILDDIR)/queries.o $(BUILDDIR)/mutations.o $(BUILDDIR)/payroll.o $(BUILDDIR)/storage.o
 
-.PHONY: all clean test dirs
+.PHONY: all clean test dirs run init-db
 
-all: dirs $(BINDIR)/helicopter_app
+all: dirs $(BINDIR)/helicopter_app $(DB_PATH)
 
 dirs:
 	@mkdir -p $(BUILDDIR) $(BINDIR)
@@ -42,6 +45,17 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 
 $(BINDIR)/helicopter_app: $(APP_OBJS)
 	$(CXX) -o $@ $(APP_OBJS) $(LDFLAGS)
+
+$(DB_PATH): $(SQLDIR)/HelicopterDelivery_create.sql $(SQLDIR)/extensions.sql $(SQLDIR)/seed.sql | dirs
+	rm -f $@
+	$(SQLITE3) $@ < $(SQLDIR)/HelicopterDelivery_create.sql
+	$(SQLITE3) $@ < $(SQLDIR)/extensions.sql
+	$(SQLITE3) $@ < $(SQLDIR)/seed.sql
+
+init-db: $(DB_PATH)
+
+run: all
+	HELI_SQL_DIR=$(SQLDIR) HELI_SEED=0 ./$(BINDIR)/helicopter_app $(DB_PATH)
 
 # --- CUnit tests ---
 $(BUILDDIR)/test_db.o: tests/test_db.cpp | dirs
