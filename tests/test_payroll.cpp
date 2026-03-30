@@ -51,6 +51,48 @@ static void test_pilot_by_type_special_and_regular(void) {
     CU_ASSERT_TRUE(rg > 0);
 }
 
+static void test_compute_squad_period_is_idempotent_for_same_period(void) {
+    std::string err;
+    CU_ASSERT_TRUE(heli::payroll_compute_squad_period(g_db, "2025-01-01", "2025-12-31", err));
+    CU_ASSERT_TRUE(heli::payroll_compute_squad_period(g_db, "2025-01-01", "2025-12-31", err));
+
+    sqlite3_stmt* st = nullptr;
+    CU_ASSERT_EQUAL(sqlite3_prepare_v2(g_db,
+                        "SELECT COUNT(*) FROM AIR_PAYROLL_PERIOD WHERE period_start='2025-01-01' AND period_end='2025-12-31'",
+                        -1, &st, nullptr),
+        SQLITE_OK);
+    CU_ASSERT_EQUAL(sqlite3_step(st), SQLITE_ROW);
+    CU_ASSERT_TRUE(sqlite3_column_int(st, 0) >= 1);
+    sqlite3_finalize(st);
+}
+
+static void test_compute_squad_period_failure_when_table_missing(void) {
+    std::string err;
+    unsetenv("HELI_SEED");
+    sqlite3* db2 = heli::db_open_or_create(":memory:", "sql", err);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(db2);
+
+    CU_ASSERT_EQUAL(sqlite3_exec(db2, "DROP TABLE AIR_PAYROLL_PERIOD", nullptr, nullptr, nullptr), SQLITE_OK);
+    bool ok = heli::payroll_compute_squad_period(db2, "2025-01-01", "2025-12-31", err);
+    CU_ASSERT_FALSE(ok);
+    CU_ASSERT_FALSE(err.empty());
+    heli::db_close(db2);
+}
+
+static void test_pilot_period_prepare_failure(void) {
+    std::string err;
+    unsetenv("HELI_SEED");
+    sqlite3* db2 = heli::db_open_or_create(":memory:", "sql", err);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(db2);
+    CU_ASSERT_EQUAL(sqlite3_exec(db2, "DROP TABLE AIR_FLIGHTS", nullptr, nullptr, nullptr), SQLITE_OK);
+
+    long long amt = 0;
+    bool ok = heli::payroll_pilot_period_amount(db2, 1001, "2025-01-01", "2025-12-31", amt, err);
+    CU_ASSERT_FALSE(ok);
+    CU_ASSERT_FALSE(err.empty());
+    heli::db_close(db2);
+}
+
 int main() {
     if (CU_initialize_registry() != CUE_SUCCESS)
         return CU_get_error();
@@ -58,7 +100,10 @@ int main() {
     CU_pSuite suite = CU_add_suite("payroll", suite_init, suite_clean);
     if (!suite || !CU_add_test(suite, "pilot_period_amount_positive", test_pilot_period_amount_positive)
         || !CU_add_test(suite, "compute_squad_period_rows", test_compute_squad_period_rows)
-        || !CU_add_test(suite, "pilot_by_type_special_and_regular", test_pilot_by_type_special_and_regular)) {
+        || !CU_add_test(suite, "pilot_by_type_special_and_regular", test_pilot_by_type_special_and_regular)
+        || !CU_add_test(suite, "compute_squad_period_is_idempotent_for_same_period", test_compute_squad_period_is_idempotent_for_same_period)
+        || !CU_add_test(suite, "compute_squad_period_failure_when_table_missing", test_compute_squad_period_failure_when_table_missing)
+        || !CU_add_test(suite, "pilot_period_prepare_failure", test_pilot_period_prepare_failure)) {
         CU_cleanup_registry();
         return CU_get_error();
     }

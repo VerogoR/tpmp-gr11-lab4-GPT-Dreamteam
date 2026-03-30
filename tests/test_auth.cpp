@@ -33,6 +33,14 @@ static void test_wrong_password(void) {
     CU_ASSERT_FALSE(e.empty());
 }
 
+static void test_unknown_login(void) {
+    heli::Session s{};
+    std::string e;
+    bool ok = heli::auth_login(g_db, "no_such_user", "x", s, e);
+    CU_ASSERT_FALSE(ok);
+    CU_ASSERT_FALSE(e.empty());
+}
+
 static void test_commander_login(void) {
     heli::Session s{};
     std::string err;
@@ -50,14 +58,38 @@ static void test_pilot_login(void) {
     CU_ASSERT_EQUAL(s.helicopter_number, 101);
 }
 
+static void test_commander_has_no_bound_helicopter(void) {
+    heli::Session s{};
+    std::string err;
+    CU_ASSERT_TRUE(heli::auth_login(g_db, "commander", "cmd_secret", s, err));
+    CU_ASSERT_TRUE(s.helicopter_number < 0);
+}
+
+static void test_prepare_failure_when_users_table_missing(void) {
+    std::string err;
+    unsetenv("HELI_SEED");
+    sqlite3* db2 = heli::db_open_or_create(":memory:", "sql", err);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(db2);
+    CU_ASSERT_EQUAL(sqlite3_exec(db2, "DROP TABLE AIR_USERS", nullptr, nullptr, nullptr), SQLITE_OK);
+
+    heli::Session s{};
+    bool ok = heli::auth_login(db2, "commander", "cmd_secret", s, err);
+    CU_ASSERT_FALSE(ok);
+    CU_ASSERT_FALSE(err.empty());
+    heli::db_close(db2);
+}
+
 int main() {
     if (CU_initialize_registry() != CUE_SUCCESS)
         return CU_get_error();
 
     CU_pSuite suite = CU_add_suite("auth", suite_init, suite_clean);
     if (!suite || !CU_add_test(suite, "wrong_password", test_wrong_password)
+        || !CU_add_test(suite, "unknown_login", test_unknown_login)
         || !CU_add_test(suite, "commander_login", test_commander_login)
-        || !CU_add_test(suite, "pilot_login", test_pilot_login)) {
+        || !CU_add_test(suite, "pilot_login", test_pilot_login)
+        || !CU_add_test(suite, "commander_has_no_bound_helicopter", test_commander_has_no_bound_helicopter)
+        || !CU_add_test(suite, "prepare_failure_when_users_table_missing", test_prepare_failure_when_users_table_missing)) {
         CU_cleanup_registry();
         return CU_get_error();
     }

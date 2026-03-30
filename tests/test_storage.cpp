@@ -50,6 +50,35 @@ static void test_export_json_contains_heli(void) {
     CU_ASSERT_TRUE(s.find("\"number\":101") != std::string::npos);
 }
 
+static void test_save_image_empty_blob(void) {
+    std::string err;
+    std::vector<unsigned char> empty;
+    CU_ASSERT_TRUE(heli::storage_save_image(g_db, "AIR_HELICOPTERS", 102, "png", empty, err));
+}
+
+static void test_export_to_invalid_path_fails(void) {
+    std::string err;
+    CU_ASSERT_FALSE(heli::storage_export_flights_csv(g_db, "/no/such/dir/flights.csv", err));
+    CU_ASSERT_FALSE(err.empty());
+    err.clear();
+    CU_ASSERT_FALSE(heli::storage_export_helicopters_json(g_db, "/no/such/dir/helicopters.json", err));
+    CU_ASSERT_FALSE(err.empty());
+}
+
+static void test_prepare_failure_for_images_table(void) {
+    std::string err;
+    unsetenv("HELI_SEED");
+    sqlite3* db2 = heli::db_open_or_create(":memory:", "sql", err);
+    CU_ASSERT_PTR_NOT_NULL_FATAL(db2);
+    CU_ASSERT_EQUAL(sqlite3_exec(db2, "DROP TABLE AIR_IMAGES", nullptr, nullptr, nullptr), SQLITE_OK);
+
+    std::vector<unsigned char> blob = {1, 2, 3};
+    bool ok = heli::storage_save_image(db2, "AIR_HELICOPTERS", 1, "png", blob, err);
+    CU_ASSERT_FALSE(ok);
+    CU_ASSERT_FALSE(err.empty());
+    heli::db_close(db2);
+}
+
 int main() {
     if (CU_initialize_registry() != CUE_SUCCESS)
         return CU_get_error();
@@ -57,7 +86,10 @@ int main() {
     CU_pSuite suite = CU_add_suite("storage", suite_init, suite_clean);
     if (!suite || !CU_add_test(suite, "save_image_blob", test_save_image_blob)
         || !CU_add_test(suite, "export_csv_header", test_export_csv_header)
-        || !CU_add_test(suite, "export_json_contains_heli", test_export_json_contains_heli)) {
+        || !CU_add_test(suite, "export_json_contains_heli", test_export_json_contains_heli)
+        || !CU_add_test(suite, "save_image_empty_blob", test_save_image_empty_blob)
+        || !CU_add_test(suite, "export_to_invalid_path_fails", test_export_to_invalid_path_fails)
+        || !CU_add_test(suite, "prepare_failure_for_images_table", test_prepare_failure_for_images_table)) {
         CU_cleanup_registry();
         return CU_get_error();
     }
